@@ -15,6 +15,16 @@ function uid(): string {
   return Math.random().toString(36).slice(2, 9);
 }
 
+// Nicely format numbers for Thai locale
+function fmt(n: number): string {
+  try {
+    return new Intl.NumberFormat("th-TH").format(n);
+  } catch {
+    return String(n);
+  }
+}
+
+// ---------- Types ----------
 type Item = {
   id: string;
   name: string; // English name matched to emoji
@@ -25,41 +35,7 @@ type Item = {
 
 type Difficulty = "ง่าย" | "กลาง" | "ยาก";
 
-// Dynamic programming solver for 0-1 knapsack
-function solveKnapsack(items: Item[], capacity: number) {
-  const n = items.length;
-  const dp: number[][] = Array.from({ length: n + 1 }, () => Array(capacity + 1).fill(0));
-
-  for (let i = 1; i <= n; i++) {
-    const { weight: w, value: v } = items[i - 1];
-    for (let c = 0; c <= capacity; c++) {
-      if (w <= c) {
-        dp[i][c] = Math.max(dp[i - 1][c], dp[i - 1][c - w] + v);
-      } else {
-        dp[i][c] = dp[i - 1][c];
-      }
-    }
-  }
-
-  // reconstruct chosen items
-  let c = capacity;
-  const chosen: string[] = [];
-  for (let i = n; i >= 1; i--) {
-    if (dp[i][c] !== dp[i - 1][c]) {
-      chosen.push(items[i - 1].id);
-      c -= items[i - 1].weight;
-    }
-  }
-  chosen.reverse();
-  return { bestValue: dp[n][capacity], chosenIds: new Set(chosen), table: dp };
-}
-
-// Prettify weight/value
-function fmt(n: number): string {
-  return n.toLocaleString("th-TH");
-}
-
-// Emoji catalog with English names (maps each emoji to a fixed English label)
+// ---------- Catalog ----------
 const EMOJI_CATALOG: Array<{ emoji: string; name: string }> = [
   { emoji: "🧪", name: "Potion" },
   { emoji: "📘", name: "Book" },
@@ -83,6 +59,7 @@ const EMOJI_CATALOG: Array<{ emoji: string; name: string }> = [
   { emoji: "🥇", name: "Gold Medal" },
 ];
 
+// ---------- Generators ----------
 function generateItems(difficulty: Difficulty): Item[] {
   const count = difficulty === "ง่าย" ? 6 : difficulty === "กลาง" ? 8 : 10;
   const items: Item[] = [];
@@ -92,7 +69,7 @@ function generateItems(difficulty: Difficulty): Item[] {
     const catalog = EMOJI_CATALOG[i % EMOJI_CATALOG.length];
     items.push({
       id: uid(),
-      name: catalog.name, // English name matched to emoji
+      name: catalog.name,
       weight,
       value,
       emoji: catalog.emoji,
@@ -107,31 +84,35 @@ function capacityFor(items: Item[], diff: Difficulty): number {
   return Math.max(8, Math.floor(totalW * ratio));
 }
 
-// ---------- Drag & Drop hooks ----------
-function useDragDrop() {
-  const [dragId, setDragId] = useState<string | null>(null);
-  const onDragStart = (id: string) => (e: React.DragEvent) => {
-    setDragId(id);
-    e.dataTransfer.setData("text/plain", id);
-    e.dataTransfer.effectAllowed = "move";
-  };
-  const onDragEnd = () => setDragId(null);
-  const onDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  };
-  const claimId = (e: React.DragEvent) => {
-    const id = e.dataTransfer.getData("text/plain");
-    return id || dragId;
-  };
-  return { dragId, onDragStart, onDragEnd, onDragOver, claimId };
+// ---------- DP Solver (0-1 Knapsack) ----------
+function solveKnapsack(items: Item[], capacity: number) {
+  const n = items.length;
+  const dp: number[][] = Array.from({ length: n + 1 }, () => Array(capacity + 1).fill(0));
+  for (let i = 1; i <= n; i++) {
+    const { weight: w, value: v } = items[i - 1];
+    for (let c = 0; c <= capacity; c++) {
+      if (w <= c) dp[i][c] = Math.max(dp[i - 1][c], dp[i - 1][c - w] + v);
+      else dp[i][c] = dp[i - 1][c];
+    }
+  }
+  // reconstruct chosen items
+  let c = capacity;
+  const chosen: string[] = [];
+  for (let i = n; i >= 1; i--) {
+    if (dp[i][c] !== dp[i - 1][c]) {
+      chosen.push(items[i - 1].id);
+      c -= items[i - 1].weight;
+    }
+  }
+  chosen.reverse();
+  return { bestValue: dp[n][capacity], chosenIds: new Set(chosen), table: dp };
 }
 
-// ---------- Tests (simple runtime assertions) ----------
+// ---------- Tests (runtime assertions) ----------
 function runKnapsackTests() {
   const results: { name: string; pass: boolean; detail?: string }[] = [];
 
-  // T1: Known optimum combination
+  // T1: Known optimum
   const items1: Item[] = [
     { id: "a", name: "A", weight: 1, value: 1, emoji: "🧪" },
     { id: "b", name: "B", weight: 2, value: 6, emoji: "💎" },
@@ -141,7 +122,7 @@ function runKnapsackTests() {
   const s1 = solveKnapsack(items1, 7);
   results.push({ name: "T1 best value", pass: s1.bestValue === 24, detail: `got ${s1.bestValue}` });
 
-  // T2: Capacity zero
+  // T2: Zero capacity
   const s2 = solveKnapsack(items1, 0);
   results.push({ name: "T2 zero capacity", pass: s2.bestValue === 0, detail: `got ${s2.bestValue}` });
 
@@ -152,12 +133,27 @@ function runKnapsackTests() {
   const s3 = solveKnapsack(items3, 5);
   results.push({ name: "T3 too heavy", pass: s3.bestValue === 0, detail: `got ${s3.bestValue}` });
 
-  // T4: Chosen items sum to best value
+  // T4: Sum of chosen equals bestValue
   const sumChosen = Array.from(s1.chosenIds).reduce((acc, id) => {
     const it = items1.find((i) => i.id === id)!;
     return acc + it.value;
   }, 0);
   results.push({ name: "T4 sum chosen equals best", pass: sumChosen === s1.bestValue, detail: `sum ${sumChosen}` });
+
+  // T5: Weight constraint respected
+  const weightChosen = Array.from(s1.chosenIds).reduce((acc, id) => {
+    const it = items1.find((i) => i.id === id)!;
+    return acc + it.weight;
+  }, 0);
+  results.push({ name: "T5 weight <= capacity", pass: weightChosen <= 7, detail: `w=${weightChosen}` });
+
+  // T6: Table monotonic in capacity for fixed i
+  const s4 = solveKnapsack(items1, 7);
+  let mono = true;
+  for (let c = 1; c <= 7; c++) {
+    if (s4.table[4][c] < s4.table[4][c - 1]) mono = false;
+  }
+  results.push({ name: "T6 monotone by capacity", pass: mono });
 
   return results;
 }
@@ -172,7 +168,7 @@ export default function KnapsackOpenHouse() {
   const [timerOn, setTimerOn] = useState(false);
   const [seconds, setSeconds] = useState(0);
 
-  // keep capacity in sync when items/difficulty change
+  // sync capacity when items/difficulty change
   useEffect(() => {
     setCapacity(capacityFor(items, difficulty));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -262,7 +258,8 @@ export default function KnapsackOpenHouse() {
 
         {/* Controls */}
         <div className="grid md:grid-cols-3 gap-4 mb-6">
-          <div className="col-span-2 bg-white rounded-2xl shadow p-4">
+          {/* Capacity Section */}
+          <div className="md:col-span-2 bg-white rounded-2xl shadow p-4">
             <div className="flex flex-wrap gap-2 items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="font-semibold">ความจุ (Capacity):</span>
@@ -290,7 +287,8 @@ export default function KnapsackOpenHouse() {
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow p-4 flex flex-col gap-2">
+          {/* Score Section */}
+          <div className="bg-white rounded-2xl shadow p-4 flex flex-col gap-2 w-full">
             <div className="flex items-center justify-between">
               <div className="font-semibold">คะแนน (Value)</div>
               <div className="font-mono">{fmt(backpackValue)}</div>
@@ -474,7 +472,7 @@ function ExplainModal({ onClose, items, capacity, solution }:{ onClose: ()=>void
           <div className="bg-slate-50 border rounded-xl p-4 text-sm leading-6">
             <div className="font-semibold mb-1">คำอธิบายเพิ่มเติม</div>
             <ul className="list-disc ml-5 text-slate-700 space-y-1">
-              <li>คิดภาพเหมือนเราไปช้อปปิ้งแล้วมีกระเป๋าที่รับน้ำหนักได้ <span className="font-mono">c</span>  kg เราอยากได้ของที่ "คุ้มค่ารวม" สูงสุด</li>
+              <li>คิดภาพเหมือนเราไปช้อปปิ้งแล้วมีกระเป๋าที่รับน้ำหนักได้ <span className="font-mono">c</span> กิโล เราอยากได้ของที่ "คุ้มค่ารวม" สูงสุด</li>
               <li>ช่อง <span className="font-mono">dp[i][c]</span> = ค่าคุ้มสูงสุดเมื่อดูของถึงชิ้นที่ <span className="font-mono">i</span> และยอมให้น้ำหนักรวมไม่เกิน <span className="font-mono">c</span></li>
               <li>ถ้าของชิ้นนี้หนักเกินไป (w &gt; c) → เอาไม่ได้ ก็ลอกค่ามาจากแถวบน (เหมือนไม่หยิบ)</li>
               <li>ถ้าน้ำหนักพอ → เลือกให้ค่าสูงสุดระหว่าง "ไม่หยิบ" กับ "หยิบแล้วเหลือน้ำหนัก <span className="font-mono">c-w</span>"</li>
@@ -522,5 +520,3 @@ function ExplainModal({ onClose, items, capacity, solution }:{ onClose: ()=>void
     </div>
   );
 }
-
-export {};
