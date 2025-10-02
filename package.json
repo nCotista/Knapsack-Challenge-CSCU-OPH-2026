@@ -2,7 +2,7 @@
   "name": "knapsack-game",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://nCotista.github.io/Knapsack-Challenge-CSCU-OPH-2026/",
+  "homepage": "https://ncotista.github.io/Knapsack-Challenge-CSCU-OPH-2026/",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",

@@ -307,7 +307,7 @@ export default function KnapsackOpenHouse() {
               <button
                 className="px-3 py-2 rounded-xl border hover:bg-slate-50"
                 onClick={() => setPickedIds(new Set())}
-              >เคลียร์กระเป๋า</button>
+              >Clear</button>
             </div>
             {isOptimal ? (
               <div className="text-green-700 text-sm mt-1">✅ เลือกได้เหมาะสุดแล้ว เก่งมาก!</div>
@@ -472,9 +472,9 @@ function ExplainModal({ onClose, items, capacity, solution }:{ onClose: ()=>void
 
           {/* Beginner-friendly box */}
           <div className="bg-slate-50 border rounded-xl p-4 text-sm leading-6">
-            <div className="font-semibold mb-1">อธิบายแบบคนไม่เคยเรียน DP มาก่อน</div>
+            <div className="font-semibold mb-1">คำอธิบายเพิ่มเติม</div>
             <ul className="list-disc ml-5 text-slate-700 space-y-1">
-              <li>คิดภาพเหมือนเราไปช้อปปิ้งแล้วมีกระเป๋าที่รับน้ำหนักได้ <span className="font-mono">c</span> กิโล เราอยากได้ของที่ "คุ้มค่ารวม" สูงสุด</li>
+              <li>คิดภาพเหมือนเราไปช้อปปิ้งแล้วมีกระเป๋าที่รับน้ำหนักได้ <span className="font-mono">c</span>  kg เราอยากได้ของที่ "คุ้มค่ารวม" สูงสุด</li>
               <li>ช่อง <span className="font-mono">dp[i][c]</span> = ค่าคุ้มสูงสุดเมื่อดูของถึงชิ้นที่ <span className="font-mono">i</span> และยอมให้น้ำหนักรวมไม่เกิน <span className="font-mono">c</span></li>
               <li>ถ้าของชิ้นนี้หนักเกินไป (w &gt; c) → เอาไม่ได้ ก็ลอกค่ามาจากแถวบน (เหมือนไม่หยิบ)</li>
               <li>ถ้าน้ำหนักพอ → เลือกให้ค่าสูงสุดระหว่าง "ไม่หยิบ" กับ "หยิบแล้วเหลือน้ำหนัก <span className="font-mono">c-w</span>"</li>
