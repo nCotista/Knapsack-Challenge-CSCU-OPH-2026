@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "./static/css/main.b2a86bd7.css",
-    "main.js": "./static/js/main.9873ed38.js",
-    "index.html": "./index.html",
-    "main.b2a86bd7.css.map": "./static/css/main.b2a86bd7.css.map",
-    "main.9873ed38.js.map": "./static/js/main.9873ed38.js.map"
+    "main.css": "/Knapsack-Challenge-CSCU-OPH-2026/static/css/main.b2a86bd7.css",
+    "main.js": "/Knapsack-Challenge-CSCU-OPH-2026/static/js/main.9873ed38.js",
+    "index.html": "/Knapsack-Challenge-CSCU-OPH-2026/index.html",
+    "main.b2a86bd7.css.map": "/Knapsack-Challenge-CSCU-OPH-2026/static/css/main.b2a86bd7.css.map",
+    "main.9873ed38.js.map": "/Knapsack-Challenge-CSCU-OPH-2026/static/js/main.9873ed38.js.map"
   },
   "entrypoints": [
     "static/css/main.b2a86bd7.css",
