@@ -1,46 +1,109 @@
-# Getting Started with Create React App
+# 🎒 Knapsack Challenge — CSCU Open House 2026
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive web application that visualizes and solves the classic **0/1 Knapsack Problem**, built for the **Computer Science, Chulalongkorn University (CSCU) Open House 2026**.
 
-## Available Scripts
+🌐 **Live Demo:** [ncotista.github.io/Knapsack-Challenge-CSCU-OPH-2026](https://ncotista.github.io/Knapsack-Challenge-CSCU-OPH-2026/)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📖 About
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The Knapsack Problem is one of the most well-known combinatorial optimization problems in computer science. Given a set of items — each with a weight and a value — the goal is to determine which items to include in a knapsack so that the total weight does not exceed a limit and the total value is maximized.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+This project was developed as part of the CSCU Open House 2026 to demonstrate algorithmic thinking and dynamic programming in an engaging, visual way.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## ✨ Features
 
-### `npm run build`
+- 🧠 Solves the 0/1 Knapsack Problem using **Dynamic Programming**
+- 🎨 Clean and responsive UI built with **React** and **Tailwind CSS**
+- 📊 Step-by-step visualization of the DP table
+- ➕ Add, remove, and customize items interactively
+- 📱 Mobile-friendly design
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🛠️ Tech Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Technology | Purpose |
+|---|---|
+| React + TypeScript | Frontend framework |
+| Tailwind CSS | Styling |
+| Create React App | Project scaffolding |
+| GitHub Pages | Deployment |
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 🚀 Getting Started
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Prerequisites
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Node.js (v16 or later)
+- npm
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Installation
 
-## Learn More
+```bash
+# Clone the repository
+git clone https://github.com/nCotista/Knapsack-Challenge-CSCU-OPH-2026.git
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# Navigate into the project folder
+cd Knapsack-Challenge-CSCU-OPH-2026
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Install dependencies
+npm install
+```
+
+### Running Locally
+
+```bash
+npm start
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+The optimized build will be output to the `build/` folder.
+
+---
+
+## 📁 Project Structure
+
+```
+Knapsack-Challenge-CSCU-OPH-2026/
+├── public/          # Static assets
+├── src/             # Source code
+├── package.json
+├── tailwind.config.js
+└── tsconfig.json
+```
+
+---
+
+## 🤝 Contributing
+
+This project was created for CSCU Open House 2026. Feel free to fork and experiment!
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add some feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+  Made with ❤️ for <strong>CSCU Open House 2026</strong>
+</div>
